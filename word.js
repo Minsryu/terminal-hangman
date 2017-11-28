@@ -3,15 +3,12 @@ var fs = require("fs");
 
 function GetList(filename){
 
-	// this.list = list;
-	// this.first = list[0];
 	this.filename = filename;
 	this.read = function(callback){
 		fs.readFile(this.filename,"utf8", function(err,res){			
 			callback(res);
 		})
 	};
-
 }
 
 function Word(list){

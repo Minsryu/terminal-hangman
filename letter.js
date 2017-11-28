@@ -12,7 +12,6 @@ function Letter (word){
 				hiddenWord.push("_");
 			}
 		}
-
 		return hiddenWord;
 	};
 }

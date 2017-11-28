@@ -6,6 +6,7 @@ var inquirer = require('inquirer');
 
 var list = new GetList("list.txt");
 
+var alreadyTried = [];
 var guessWord;
 var hiddenWord;
 var tries;
@@ -20,9 +21,11 @@ list.read(function(data){
 		var wordObj = new Letter(guessWord);
 		hiddenWord = wordObj.hidden();
 		tries = 8;
+		alreadyTried = [];
 		console.log("/////////////////////////////////");
 		console.log("You have "+ tries+" tries left.\n");
 		console.log(hiddenWord.join(" "));
+		askLetter();
 		
 	}
 	
@@ -32,17 +35,15 @@ list.read(function(data){
 			console.log("/////////////////////////////////");
 			console.log("You got it right! Guess the Next Word");
 			initialize(data);
-			askLetter();
 		}
 		else if(tries > 0){
-
 			inquirer.prompt([
 				{
 					type:"input",
 					message:"Guess a letter",
 					name:"guess",
 					validate: function(value) {
-			          if ( typeof value === "string" && value.length === 1) {
+			          if ( typeof value === "string" && value.length === 1 && alreadyTried.indexOf(value)===-1) {
 			            return true;
 			          }
 			          return false;
@@ -50,7 +51,7 @@ list.read(function(data){
 				}
 			]).then(function(data){
 				var x = data.guess;
-
+				alreadyTried.push(x);
 
 				if(guessWord.indexOf(x)===-1){
 					tries--;
@@ -73,18 +74,15 @@ list.read(function(data){
 					console.log(hiddenWord.join(" "));
 					askLetter();
 				}
-
-				
 			});
 		}
 		else{
-			console.log("\nYou have failed!");
+			console.log("/////////////////////////////////");
+			console.log("\nYou have failed! Let's try that again");
+			initialize(data);
 		}
-	
 	}
-
 	initialize(data);
-	askLetter();
 	
 });
 
